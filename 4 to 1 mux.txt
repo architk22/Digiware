@@ -1,0 +1,44 @@
+
+  module mux_example(sel,y);
+      input [1:0] sel;
+      output [3:0] y;
+      reg [3:0] y;
+    
+  always @(*) begin
+    y=4'd0;
+    case(sel)
+      2'b00: y[0]=1'b1;
+      2'b01: y[1]=1'b1;
+      2'b10: y[2]=1'b1;
+      2'b11: y[3]=1'b1;
+      default: $display("Invalid sel input");
+    endcase
+  end
+endmodule
+
+// testbench
+
+module tb;
+  reg [1:0] sel;
+  wire [3:0] y;
+  integer i;
+  
+  mux_example dut(sel, y);
+  
+  initial begin
+    // sel=2'b01;
+    //#1;
+   /* for( i=0;i<4;i=i+1)
+      begin
+        sel=i;
+        #1;
+      end*/
+    $monitor("sel = %b , y = %b", sel,y);
+   for( i=0;i<4;i=i+1)
+      begin
+        sel=i;
+        #1;
+      end
+    //sel=2'b01;
+  end
+endmodule
