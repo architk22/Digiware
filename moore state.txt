@@ -1,0 +1,66 @@
+
+module moorestate (
+  input wire clk,
+  input wire reset,
+  input wire x,
+  output reg z
+);
+
+  parameter A = 0;
+  parameter B = 1;
+
+  reg state;
+
+  always @(posedge clk or posedge reset) begin
+    if (reset) begin
+      state <= B;
+    end else begin
+      if (x == 0) begin
+        state <= ~state;
+      end
+    end
+  end
+
+  always @(posedge clk or posedge reset) begin
+    if (reset) begin
+      z <= B;
+    end else begin
+      z <= state;
+    end
+  end
+
+endmodule
+
+//testbench
+
+
+module moorestate_tb;
+  reg clk, reset, x;
+  wire z;
+
+  moorestate uut (clk,reset,x,z);
+
+  initial begin
+    $dumpfile("moorestate.vcd");
+    $dumpvars(0, moorestate_tb);
+
+    clk = 0;
+    reset = 1;
+    x = 0;
+
+    #5 reset = 0;
+
+    #10 x = 0;
+    #10 x = 1;
+    #10 x = 0;
+    #10 x = 1;
+    #10 x = 0;
+
+    repeat (20) begin
+      #5 clk = ~clk;
+    end
+
+    #10 $finish;
+  end
+
+endmodule
